@@ -143,6 +143,8 @@ def normalized_provider(settings: Settings) -> str:
     provider = settings.llm_provider.strip().lower().replace(" ", "").replace("-", "")
     if provider == "anthorpic":
         return "anthropic"
+    if provider in {"google", "googlegenai", "googlegemini"}:
+        return "gemini"
     if provider == "customllm":
         return "custom"
     return provider
