@@ -1,0 +1,16 @@
+{
+  "source_api": "Crossref REST API",
+  "query": "agentic retrieval augmented generation large language model",
+  "filter": "from-pub-date:2026-03-29,has-abstract:true",
+  "mode": "snapshot",
+  "raw_response": "data/raw/crossref_response.json",
+  "raw_records": "data/raw/crossref_records.json",
+  "raw_record_count": 24,
+  "clean_row_count": 24,
+  "run_date": "2026-09-25",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "collection": "papers-baseline",
+  "indexed_documents": 24,
+  "top_k": 4,
+  "llm_provider": "openai"
+}

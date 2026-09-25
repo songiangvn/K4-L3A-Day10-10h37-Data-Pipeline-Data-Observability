@@ -1,0 +1,103 @@
+{
+  "generated_at": "2026-09-25T08:29:01.594428+00:00",
+  "seed": 42,
+  "input_rows": 24,
+  "output_rows": 25,
+  "corruption_count": 6,
+  "corruptions": [
+    {
+      "corruption": "drop_latest_records",
+      "description": "Dropped the newest 20% of papers by published date.",
+      "params": {
+        "ratio": 0.2
+      },
+      "affected_rows": 5,
+      "affected_paper_ids": [
+        "10.1145/3637528.3671812",
+        "10.1145/3637528.3671808",
+        "10.1145/3637528.3671804",
+        "10.1145/3637528.3671807",
+        "10.1145/3637528.3671802"
+      ]
+    },
+    {
+      "corruption": "blank_summary",
+      "description": "Replaced the abstract with an empty string.",
+      "params": {
+        "ratio": 0.2
+      },
+      "affected_rows": 4,
+      "affected_paper_ids": [
+        "10.1145/3637528.3671824",
+        "10.1145/3637528.3671821",
+        "10.1145/3637528.3671818",
+        "10.1145/3637528.3671817"
+      ]
+    },
+    {
+      "corruption": "inject_noise",
+      "description": "Wrapped the abstract with garbage tokens.",
+      "params": {
+        "ratio": 0.2,
+        "noise_token": "#@!$%^ lorem ipsum ##ERR## 0xDEADBEEF"
+      },
+      "affected_rows": 3,
+      "affected_paper_ids": [
+        "10.1145/3637528.3671810",
+        "10.1145/3637528.3671820",
+        "10.1145/3637528.3671806"
+      ]
+    },
+    {
+      "corruption": "truncate_title",
+      "description": "Cut titles to 7 characters (< 8).",
+      "params": {
+        "ratio": 0.25,
+        "max_chars": 7
+      },
+      "affected_rows": 5,
+      "affected_paper_ids": [
+        "10.1145/3637528.3671824",
+        "10.1145/3637528.3671822",
+        "10.1145/3637528.3671821",
+        "10.1145/3637528.3671801",
+        "10.1145/3637528.3671803"
+      ]
+    },
+    {
+      "corruption": "stale_date",
+      "description": "Moved the published date back 365 days.",
+      "params": {
+        "ratio": 0.4,
+        "shift_days": 365
+      },
+      "affected_rows": 8,
+      "affected_paper_ids": [
+        "10.1145/3637528.3671824",
+        "10.1145/3637528.3671822",
+        "10.1145/3637528.3671819",
+        "10.1145/3637528.3671818",
+        "10.1145/3637528.3671817",
+        "10.1145/3637528.3671816",
+        "10.1145/3637528.3671811",
+        "10.1145/3637528.3671805"
+      ]
+    },
+    {
+      "corruption": "duplicate_rows",
+      "description": "Appended exact copies of existing rows.",
+      "params": {
+        "ratio": 0.3
+      },
+      "affected_rows": 6,
+      "affected_paper_ids": [
+        "10.1145/3637528.3671819",
+        "10.1145/3637528.3671818",
+        "10.1145/3637528.3671816",
+        "10.1145/3637528.3671801",
+        "10.1145/3637528.3671806",
+        "10.1145/3637528.3671803"
+      ]
+    }
+  ]
+}

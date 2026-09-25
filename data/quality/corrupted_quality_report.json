@@ -1,0 +1,123 @@
+{
+  "report_name": "corrupted",
+  "engine": "great_expectations 1.23.1",
+  "generated_at": "2026-09-25T08:29:01.815900+00:00",
+  "row_count": 25,
+  "success": false,
+  "evaluated_expectations": 7,
+  "successful_expectations": 4,
+  "failed_checks": [
+    "paper_id_unique",
+    "summary_min_length",
+    "title_min_length"
+  ],
+  "expectations": [
+    {
+      "check": "row_count_between",
+      "dimension": "Volume",
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "column": null,
+      "success": true,
+      "observed_value": 25,
+      "unexpected_count": null,
+      "unexpected_percent": null,
+      "partial_unexpected_list": []
+    },
+    {
+      "check": "paper_id_not_null",
+      "dimension": "Completeness",
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "column": "paper_id",
+      "success": true,
+      "observed_value": null,
+      "unexpected_count": 0,
+      "unexpected_percent": 0.0,
+      "partial_unexpected_list": []
+    },
+    {
+      "check": "title_not_null",
+      "dimension": "Completeness",
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "column": "title",
+      "success": true,
+      "observed_value": null,
+      "unexpected_count": 0,
+      "unexpected_percent": 0.0,
+      "partial_unexpected_list": []
+    },
+    {
+      "check": "text_for_embedding_not_null",
+      "dimension": "Completeness",
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "column": "text_for_embedding",
+      "success": true,
+      "observed_value": null,
+      "unexpected_count": 0,
+      "unexpected_percent": 0.0,
+      "partial_unexpected_list": []
+    },
+    {
+      "check": "paper_id_unique",
+      "dimension": "Uniqueness",
+      "expectation_type": "expect_column_values_to_be_unique",
+      "column": "paper_id",
+      "success": false,
+      "observed_value": null,
+      "unexpected_count": 12,
+      "unexpected_percent": 48.0,
+      "partial_unexpected_list": [
+        "10.1145/3637528.3671819",
+        "10.1145/3637528.3671818",
+        "10.1145/3637528.3671816",
+        "10.1145/3637528.3671801",
+        "10.1145/3637528.3671806"
+      ]
+    },
+    {
+      "check": "summary_min_length",
+      "dimension": "Validity",
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "column": "summary",
+      "success": false,
+      "observed_value": null,
+      "unexpected_count": 5,
+      "unexpected_percent": 20.0,
+      "partial_unexpected_list": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "check": "title_min_length",
+      "dimension": "Validity",
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "column": "title",
+      "success": false,
+      "observed_value": null,
+      "unexpected_count": 7,
+      "unexpected_percent": 28.000000000000004,
+      "partial_unexpected_list": [
+        "Advance",
+        "Advance",
+        "Advance",
+        "Agentic",
+        "Mitigat"
+      ]
+    }
+  ],
+  "freshness": {
+    "latest_published": "2026-06-11",
+    "oldest_published": "2025-03-28",
+    "min_age_days": 106,
+    "max_age_days": 546,
+    "threshold_days": 180,
+    "stale_rows": 11,
+    "total_rows": 25,
+    "stale_ratio": 0.44,
+    "max_stale_ratio": 0.25,
+    "is_fresh": false
+  }
+}

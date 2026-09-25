@@ -1,0 +1,12 @@
+[
+  {
+    "question": "Which papers discuss data quality gates for RAG systems?",
+    "status": "error",
+    "reason": "OpenAIAuthenticationError: Error code: 401 - {'error': {'message': 'Incorrect API key provided: [REDACTED]. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'code': '"
+  },
+  {
+    "question": "What does the corpus say about freshness SLAs for LLM knowledge?",
+    "status": "error",
+    "reason": "OpenAIAuthenticationError: Error code: 401 - {'error': {'message': 'Incorrect API key provided: [REDACTED]. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'code': '"
+  }
+]

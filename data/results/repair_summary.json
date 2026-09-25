@@ -1,0 +1,21 @@
+{
+  "initial_gate_success": false,
+  "initial_is_fresh": false,
+  "initial_failed_checks": [
+    "paper_id_unique",
+    "summary_min_length",
+    "title_min_length"
+  ],
+  "auto_repair_triggered": true,
+  "repair_source": "data/raw/crossref_records.json",
+  "repaired_gate_success": true,
+  "repaired_is_fresh": true,
+  "repair_run_date": "2026-09-25",
+  "repaired_rows": 24,
+  "baseline_sha256": "f0be02afc5d4360f",
+  "repaired_run_1_sha256": "f0be02afc5d4360f",
+  "repaired_run_2_sha256": "f0be02afc5d4360f",
+  "corrupted_sha256": "0625190a6dec882e",
+  "idempotent (run_1 == run_2)": true,
+  "repaired == baseline": true
+}
