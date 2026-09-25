@@ -12,6 +12,19 @@ from core.utils import read_json, safe_slug, write_json
 from retrieval.embeddings import MiniLMEmbeddings
 
 
+def _portable_path(path: Path, root: Path) -> str:
+    """Store artifact paths relative to the project so manifests work on any machine."""
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def _resolve_path(value: str, root: Path) -> Path:
+    path = Path(value)
+    return path if path.is_absolute() else root / path
+
+
 @dataclass(frozen=True)
 class SearchResult:
     paper_id: str
@@ -116,7 +129,7 @@ class LocalEmbeddingIndex:
             {
                 "backend": "chroma",
                 "embedding_model": settings.embedding_model,
-                "persist_path": str(persist_path),
+                "persist_path": _portable_path(persist_path, settings.paths.project_dir),
                 "collection_name": collection_name,
                 "documents": documents,
             },
@@ -135,7 +148,7 @@ class LocalEmbeddingIndex:
             settings=settings,
             collection_name=payload["collection_name"],
             documents=payload["documents"],
-            persist_path=Path(payload["persist_path"]),
+            persist_path=_resolve_path(payload["persist_path"], settings.paths.project_dir),
         )
 
     def search(self, query: str, top_k: int | None = None) -> list[SearchResult]:

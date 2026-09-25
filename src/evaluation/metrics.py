@@ -136,6 +136,20 @@ def evaluate_pipeline(
         "mean_token_f1": mean(item["token_f1"] for item in answers),
         "judge_accuracy": mean(1.0 if item["judge"]["correct"] else 0.0 for item in answers),
         "mean_judge_score": mean(item["judge"]["score"] for item in answers),
+        "judge_mode": (
+            "heuristic_fallback"
+            if all(item["judge"]["reasoning"].startswith("Fallback heuristic") for item in answers)
+            else f"llm:{settings.llm_provider}/{settings.model_name}"
+        ),
+    }
+    summary["by_question_type"] = {
+        qtype: {
+            "n": len(group),
+            "hit_rate": mean(1.0 if item["retrieval_hit"] else 0.0 for item in group),
+            "mean_token_f1": mean(item["token_f1"] for item in group),
+        }
+        for qtype in dict.fromkeys(item["question_type"] for item in answers)
+        for group in [[item for item in answers if item["question_type"] == qtype]]
     }
     summary["ragas"] = _run_ragas(settings, answers)
 
