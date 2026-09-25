@@ -4,7 +4,7 @@
   "mean_token_f1": 1.0,
   "judge_accuracy": 1.0,
   "mean_judge_score": 5,
-  "judge_mode": "heuristic_fallback",
+  "judge_mode": "llm:openai/gpt-4o-mini",
   "by_question_type": {
     "summary": {
       "n": 3,

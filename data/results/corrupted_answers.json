@@ -23,9 +23,9 @@
     "retrieval_hit": false,
     "token_f1": 0.0,
     "judge": {
-      "score": 1,
+      "score": 2,
       "correct": false,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer does not provide a summary of the paper but only states a single point about static benchmarks. It lacks the comprehensive overview expected in a summary."
     }
   },
   {
@@ -54,7 +54,7 @@
     "judge": {
       "score": 5,
       "correct": true,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer matches the reference answer exactly, providing the correct authors of the paper."
     }
   },
   {
@@ -81,9 +81,9 @@
     "retrieval_hit": false,
     "token_f1": 0.0,
     "judge": {
-      "score": 1,
+      "score": 2,
       "correct": false,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer is close to the reference answer but is not materially correct as it provides a different date."
     }
   },
   {
@@ -112,7 +112,7 @@
     "judge": {
       "score": 5,
       "correct": true,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer matches the reference answer exactly, identifying the same categories of 'Data Quality' and 'DevOps'."
     }
   },
   {
@@ -139,9 +139,9 @@
     "retrieval_hit": true,
     "token_f1": 0.8,
     "judge": {
-      "score": 3,
-      "correct": true,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "score": 1,
+      "correct": false,
+      "reasoning": "The model answer contains nonsensical text and does not provide a coherent summary of the paper, despite repeating part of the reference answer."
     }
   },
   {
@@ -168,7 +168,7 @@
     "judge": {
       "score": 5,
       "correct": true,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer matches the reference answer exactly, providing the correct authors of the paper."
     }
   },
   {
@@ -193,9 +193,9 @@
     "retrieval_hit": true,
     "token_f1": 0.0,
     "judge": {
-      "score": 1,
+      "score": 2,
       "correct": false,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer is incorrect as it states the publication date as 2025-06-04, while the reference answer indicates the correct date is 2026-06-04. The model answer is only one year off."
     }
   },
   {
@@ -224,7 +224,7 @@
     "judge": {
       "score": 5,
       "correct": true,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer matches the reference answer exactly, providing the same categories without any discrepancies."
     }
   },
   {
@@ -253,7 +253,7 @@
     "judge": {
       "score": 5,
       "correct": true,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer is identical to the reference answer, accurately summarizing the key point about dense vector search."
     }
   },
   {
@@ -282,7 +282,7 @@
     "judge": {
       "score": 5,
       "correct": true,
-      "reasoning": "Fallback heuristic judge used because the LLM evaluator was unavailable."
+      "reasoning": "The model answer matches the reference answer exactly, providing the correct authors of the paper."
     }
   }
 ]

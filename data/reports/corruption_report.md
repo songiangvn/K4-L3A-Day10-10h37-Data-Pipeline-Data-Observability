@@ -1,6 +1,6 @@
 # Corruption Report — Baseline vs Corrupted vs Repaired
 
-_Generated at 2026-09-25T08:29:22.275239+00:00 by `script/run_corruption_flow.py`. All three states are evaluated on the same `data/eval/test_set.json`._
+_Generated at 2026-09-25T08:38:46.877263+00:00 by `script/run_corruption_flow.py`. All three states are evaluated on the same `data/eval/test_set.json`._
 
 ## 1. Three-state comparison
 
@@ -8,8 +8,8 @@ _Generated at 2026-09-25T08:29:22.275239+00:00 by `script/run_corruption_flow.py
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `retrieval_hit_rate` | 1.0000 | 0.7000 | 1.0000 | -0.3000 | 100% |
 | `mean_token_f1` | 1.0000 | 0.6800 | 1.0000 | -0.3200 | 100% |
-| `judge_accuracy` | 1.0000 | 0.7000 | 1.0000 | -0.3000 | 100% |
-| `mean_judge_score` | 5 | 3.6000 | 5 | -1.4000 | 100% |
+| `judge_accuracy` | 1.0000 | 0.6000 | 1.0000 | -0.4000 | 100% |
+| `mean_judge_score` | 5 | 3.7000 | 5 | -1.3000 | 100% |
 | Row count | 24 | 25 | 24 | - | - |
 | GX quality gate | PASS (7/7) | FAIL (4/7) | PASS (7/7) | - | - |
 | Freshness is_fresh (stale ratio) | True (0.0417) | False (0.4400) | True (0.0417) | - | - |

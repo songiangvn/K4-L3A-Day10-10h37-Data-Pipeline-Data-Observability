@@ -24,7 +24,7 @@ Nhóm đã hoàn thành đủ 7 tầng pipeline: ingestion từ Crossref (dual-m
 
 Trên dữ liệu bị corrupt, agent vẫn trả lời bình thường, không báo lỗi. Đó chính là silent failure: hit rate giảm còn **0.70**, token F1 còn **0.68**. Chỉ có tầng observability phát hiện ra vấn đề: GX fail 3 check (`paper_id_unique`, `summary_min_length`, `title_min_length`) và freshness chuyển sang `False` (stale ratio 0.44). Corruption ảnh hưởng mạnh nhất là `drop_latest_records`: cả 3 câu hỏi có tài liệu đích bị xoá đều mất retrieval hit. Self-healing gate tự phát hiện gate fail và rebuild dữ liệu từ raw snapshot, phục hồi **100%** mọi metric. Hash SHA-256 chứng minh lần repair 1 = lần repair 2 = baseline, tức repair idempotent.
 
-Giới hạn chính: `inject_noise` không bị GX bắt vì độ dài summary vẫn hợp lệ, và LLM judge cần API key hợp lệ. Khi không có key, pipeline dùng heuristic judge (có ghi rõ ở `judge_mode`).
+LLM judge (`gpt-4o-mini`) cho `judge_accuracy` 1.0 → **0.6** → 1.0. Nó còn bắt được lỗi `inject_noise` mà token F1 bỏ sót: eval_005 có F1 0.80 nhưng judge chấm 1/5. Giới hạn chính: `inject_noise` không bị GX bắt vì độ dài summary vẫn hợp lệ.
 
 ## 3. Kiến trúc và luồng dữ liệu
 
@@ -62,7 +62,7 @@ Snapshot data/raw/crossref_response.json ─┘
 
 | Biến/cấu hình             | Giá trị sử dụng |
 | ---------------------------- | ------------------- |
-| `LLM_PROVIDER`             | `openai` (không có key hợp lệ thì dùng heuristic judge; test dùng `mock`) |
+| `LLM_PROVIDER`             | `openai` (không có key thì tự fallback sang heuristic judge; test/CI dùng `mock`) |
 | `LLM_MODEL`                | `gpt-4o-mini` |
 | Embedding model              | `sentence-transformers/all-MiniLM-L6-v2` |
 | Số lượng Crossref records | 24 (snapshot) |
@@ -143,7 +143,7 @@ Cách tạo `text_for_embedding`, document ID và `age_days`:
 | Embedding model                          | `sentence-transformers/all-MiniLM-L6-v2` |
 | Vector store/collection                  | ChromaDB persistent `data/chroma`, cosine; `papers-baseline`, `papers-corrupted`, `papers-repaired` |
 | Retrieval`top_k`                       | 4 |
-| LLM provider/model                       | openai / gpt-4o-mini cho judge; `judge_mode` trong metrics ghi rõ heuristic fallback khi không có key |
+| LLM provider/model                       | openai / gpt-4o-mini cho LLM judge (structured output: score 1–5, correct, reasoning) và agent demo; `judge_mode = llm:openai/gpt-4o-mini` trong cả 3 file metrics |
 | Test set dùng chung cho ba trạng thái | `data/eval/test_set.json` (chỉ sinh lại khi `REFRESH_TEST_SET=1`) |
 
 Vì sao giữ nguyên test set: test set là thước đo cố định. Nếu sinh lại test set từ dữ liệu corrupted thì ground truth cũng bị corrupt theo (ví dụ summary rỗng thì đáp án cũng rỗng), và metric sẽ không giảm, che mất silent failure. Dùng cùng một file cho cả 3 trạng thái thì mọi chênh lệch metric chỉ còn do dữ liệu gây ra.
@@ -168,8 +168,8 @@ Vì sao giữ nguyên test set: test set là thước đo cố định. Nếu si
 | ---------------------- | --------------: | --------------------------------------- |
 | `retrieval_hit_rate` | 1.0 | Cả 10 câu đều có tài liệu đích trong top-4 (exact-title lookup + semantic search) |
 | `mean_token_f1`      | 1.0 | Câu trả lời trích xuất trùng khớp ground truth |
-| `judge_accuracy`     | 1.0 | Heuristic judge (F1 ≥ 0.5 được coi là đúng) |
-| `mean_judge_score`   | 5 | |
+| `judge_accuracy`     | 1.0 | LLM judge gpt-4o-mini chấm đúng 10/10 |
+| `mean_judge_score`   | 5 | 10/10 câu điểm 5 |
 | Ragas, nếu có        | N/A | Bỏ qua mặc định (`RUN_RAGAS=1` để bật), vì chậm và cần LLM key |
 
 ## 8. Data quality và freshness
@@ -221,8 +221,8 @@ Repair không sửa trên dataframe bị corrupt. `repair_from_raw()` đọc l�
 | ------------------------ | -------: | --------: | -------: | -----------------------: | --------------: | ------------ |
 | `retrieval_hit_rate`   | 1.0 | 0.7 | 1.0 | −0.30 | 100% | 3 câu mất tài liệu đích do `drop_latest_records` |
 | `mean_token_f1`        | 1.0 | 0.68 | 1.0 | −0.32 | 100% | Do drop (eval_001, eval_003), noise (eval_005), stale date (eval_007) |
-| `judge_accuracy`       | 1.0 | 0.7 | 1.0 | −0.30 | 100% | Heuristic judge |
-| `mean_judge_score`     | 5 | 3.6 | 5 | −1.4 | 100% | |
+| `judge_accuracy`       | 1.0 | 0.6 | 1.0 | −0.40 | 100% | LLM judge đánh sai 4 câu: eval_001, 003, 005, 007 |
+| `mean_judge_score`     | 5 | 3.7 | 5 | −1.3 | 100% | eval_005 (noise) bị chấm 1/5 dù F1 = 0.80 |
 | Quality checks pass/fail | Pass 7/7 | Fail 4/7 | Pass 7/7 | 3 check fail | Phục hồi | unique, summary length, title length |
 | Freshness status         | Fresh (0.04) | Stale (0.44) | Fresh (0.04) | +0.40 stale ratio | Phục hồi | stale_date + duplicate |
 
@@ -230,6 +230,8 @@ Kết luận nhân quả:
 
 1. `stale_date` + `duplicate_rows` làm 11/25 dòng có `age_days > 180`, khiến Freshness SLA chuyển `is_fresh=False` (0.44 > 0.25). Câu eval_007 (date) trả lời `2025-06-04` thay vì `2026-06-04`, F1 1.0 → 0.0. Agent vẫn trả lời tự tin, không báo lỗi.
 2. `drop_latest_records` xoá 5 bài mới nhất, khiến 3 câu (eval_001–003) mất retrieval hit và hit rate giảm 1.0 → 0.7. Repair từ raw khôi phục 24 bài, GX pass 7/7, freshness fresh, hit rate và F1 về lại 1.0 (recovery 100%, hash trùng baseline).
+
+3. `inject_noise` bọc summary của eval_005 bằng chuỗi rác. GX không bắt được, token F1 chỉ giảm nhẹ (1.00 → 0.80), nhưng LLM judge chấm 1/5 ("nonsensical text"). Vì vậy `judge_accuracy` (0.6) giảm mạnh hơn hit rate (0.7): LLM judge là tín hiệu duy nhất phát hiện loại lỗi nội dung này.
 
 Kết quả khác kỳ vọng: eval_002 (authors) mất retrieval hit nhưng F1 vẫn 1.0, vì corpus có bài "Advanced Perspectives on …" trùng tác giả với bài bị xoá. Agent trả lời "đúng" nhưng dựa trên tài liệu sai. Đây là minh chứng rằng metric chỉ đo câu trả lời thì có thể che lỗi retrieval. `truncate_title` (eval_004) không làm mất hit vì semantic search trên câu hỏi vẫn tìm ra đúng tài liệu.
 
@@ -248,7 +250,7 @@ Vấn đề thứ hai: key OpenAI không hợp lệ làm lỗi 401 kèm key đã
 | --------------------- | -------------- | ----------------------------------------- |
 | GX không bắt được `inject_noise` | Nhiễu chỉ lộ ra qua F1, sau khi đã serve | Thêm expectation regex / tỉ lệ ký tự không phải chữ trong summary; kiểm chứng `corrupted_quality_report` fail thêm check này |
 | `drop_latest_records` không fail GX (24 → 25 dòng vẫn trong 5–5000) | Mất dữ liệu mới mà gate vẫn pass | So row count / `latest_published` với lần chạy trước (volume + freshness drift); test bằng corrupted run |
-| Judge dùng heuristic khi thiếu key | `judge_accuracy` gần như trùng hit/F1 | Chạy với key LLM hợp lệ, so `judge_mode=llm:*` |
+| LLM judge tốn chi phí và cần API key (CI dùng mock → heuristic) | Kết quả judge phụ thuộc model, có thể dao động giữa các lần chạy | Cố định `temperature=0`, lưu `reasoning`; so sánh judge của 2 model khác nhau trên cùng test set |
 | Corpus nhỏ, có cặp bài gần trùng | Hit rate có thể nhiễu | Mở rộng `max_results`, thêm metric MRR |
 
 ## 13. Checklist trước khi nộp

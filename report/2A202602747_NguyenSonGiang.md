@@ -119,8 +119,8 @@ python script/run_tests.py
 | ---------------------- | -------: | --------: | -------: | ------------------------- |
 | `retrieval_hit_rate` | 1.0 | 0.7 | 1.0 | Giảm hoàn toàn do drop 3 tài liệu đích |
 | `mean_token_f1`      | 1.0 | 0.68 | 1.0 | Drop, noise, stale date cùng góp phần |
-| `judge_accuracy`     | 1.0 | 0.7 | 1.0 | Heuristic judge |
-| `mean_judge_score`   | 5 | 3.6 | 5 | |
+| `judge_accuracy`     | 1.0 | 0.6 | 1.0 | LLM judge (gpt-4o-mini) đánh sai 4 câu, gồm câu noise mà F1 vẫn 0.80 |
+| `mean_judge_score`   | 5 | 3.7 | 5 | |
 | Quality checks         | 7/7 | 4/7 | 7/7 | Fail unique / summary / title length |
 | Freshness status       | Fresh | Stale | Fresh | 0.04 → 0.44 → 0.04 |
 

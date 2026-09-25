@@ -2,9 +2,9 @@
   "samples": 10,
   "retrieval_hit_rate": 0.7,
   "mean_token_f1": 0.68,
-  "judge_accuracy": 0.7,
-  "mean_judge_score": 3.6,
-  "judge_mode": "heuristic_fallback",
+  "judge_accuracy": 0.6,
+  "mean_judge_score": 3.7,
+  "judge_mode": "llm:openai/gpt-4o-mini",
   "by_question_type": {
     "summary": {
       "n": 3,

@@ -1,6 +1,6 @@
 # Phase 1 Report — Baseline Data Pipeline
 
-_Generated at 2026-09-25T08:28:31.050828+00:00 by `script/run_phase1.py`._
+_Generated at 2026-09-25T08:37:38.465671+00:00 by `script/run_phase1.py`._
 
 ## 1. Source & lineage
 
@@ -26,7 +26,7 @@ _Generated at 2026-09-25T08:28:31.050828+00:00 by `script/run_phase1.py`._
 | Metric | Value |
 | --- | ---: |
 | samples | 10 |
-| judge_mode | heuristic_fallback |
+| judge_mode | llm:openai/gpt-4o-mini |
 | retrieval_hit_rate | 1.0000 |
 | mean_token_f1 | 1.0000 |
 | judge_accuracy | 1.0000 |
