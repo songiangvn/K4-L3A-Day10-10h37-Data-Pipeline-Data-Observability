@@ -224,3 +224,30 @@ GOOGLE_API_KEY=your_gemini_api_key_here
   > GitHub chỉ ghi nhận đóng góp khi commit được push trực tiếp vào **nhánh mặc định (`main`)**.  
   > Trước khi nộp bài, mở trình duyệt vào repo nhóm, chọn tab **Insights > Contributors**. Bắt buộc mọi thành viên trong nhóm đều phải xuất hiện trên biểu đồ commit thì mới được tính điểm chuyên cần nhóm!
 - [ ] **Nộp bài lên VLearn LMS:** Mỗi thành viên copy đường link repository GitHub của nhóm và nộp lên cổng LMS trước khi đồng hồ đếm ngược kết thúc 240 phút!
+
+---
+
+## 7. BÀI LÀM CỦA NHÓM 10h37 — KẾT QUẢ & CÁCH CHẠY
+
+```bash
+python -m pip install -e ".[dev]"
+python script/run_phase1.py            # Baseline: raw -> clean -> GX gate -> Chroma -> eval -> phase1_report.md
+python script/run_corruption_flow.py   # 6 corruption -> eval -> self-healing repair -> corruption_report.md
+python script/run_tests.py             # Pytest end-to-end + coverage (>= 80%)
+python script/build_dashboard.py       # Dashboard HTML: data/reports/dashboard.html
+```
+
+| State | retrieval_hit_rate | mean_token_f1 | GX gate | Freshness |
+| --- | ---: | ---: | --- | --- |
+| Baseline | 1.00 | 1.00 | PASS 7/7 | Fresh (stale 4%) |
+| Corrupted | 0.70 | 0.68 | FAIL 4/7 | Stale (stale 44%) |
+| Repaired | 1.00 | 1.00 | PASS 7/7 | Fresh (stale 4%) |
+
+*(Số liệu trích từ `data/results/*_metrics.json`; chi tiết trong [`data/reports/corruption_report.md`](data/reports/corruption_report.md).)*
+
+**Bonus đã triển khai:**
+- **B1 — Observability dashboard:** `src/observability/dashboard.py` → `data/reports/dashboard.html` (trạng thái GX từng check, freshness, phân bố `age_days` so với SLA 180 ngày, metrics 3 trạng thái).
+- **B2 — Self-healing pipeline:** `self_healing_gate()` trong `src/pipelines/corruption_flow.py` tự phát hiện GX/freshness fail → rebuild từ raw snapshot → validate lại trước khi index; bằng chứng idempotent (SHA-256) trong `data/results/repair_summary.json`.
+- **B3 — Test suite + CI:** `tests/` (30 tests, ingestion → cleaning → GX → retrieval → 2 pipeline end-to-end, coverage ~94%), one-click `script/run_tests.py`, GitHub Actions `.github/workflows/ci.yml` (chạy với `LLM_PROVIDER=mock`).
+
+**Dual-mode:** mặc định đọc snapshot `data/raw/crossref_response.json`; đặt `REFRESH_SOURCE=1` để gọi Crossref API live (retry/backoff 429/5xx, fallback snapshot khi lỗi).
