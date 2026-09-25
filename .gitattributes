@@ -1,0 +1,3 @@
+data/chroma/** binary
+*.bin binary
+*.sqlite3 binary
